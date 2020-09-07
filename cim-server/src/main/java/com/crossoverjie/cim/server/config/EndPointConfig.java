@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * Function: 监控端点配置
- *
+ * 没看懂
  * @author crossoverJie
  *         Date: 17/04/2018 15:48
  * @since JDK 1.8

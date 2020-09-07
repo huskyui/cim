@@ -29,6 +29,7 @@ public class BeanConfig {
     }
 
     /**
+     * http调用
      * http client
      * @return okHttp
      */
@@ -45,6 +46,7 @@ public class BeanConfig {
 
     /**
      * 创建心跳单例
+     * 用于发送心跳，但是没有使用
      * @return
      */
     @Bean(value = "heartBeat")

@@ -43,7 +43,8 @@ public class CIMServer {
 
 
     /**
-     * 启动 cim server
+     *
+     * 启动 cim server，在CimServer注入到IndexController，会优先执行start()方法，创建一个nettyServer
      *
      * @return
      * @throws InterruptedException
@@ -51,6 +52,7 @@ public class CIMServer {
     @PostConstruct
     public void start() throws InterruptedException {
 
+        // 此处的nettyPort就是那个nettyServer提供给客户端连接的端口
         ServerBootstrap bootstrap = new ServerBootstrap()
                 .group(boss, work)
                 .channel(NioServerSocketChannel.class)
@@ -61,6 +63,7 @@ public class CIMServer {
 
         ChannelFuture future = bootstrap.bind().sync();
         if (future.isSuccess()) {
+            // 创建server成功回调
             LOGGER.info("Start cim server success!!!");
         }
     }
@@ -82,6 +85,7 @@ public class CIMServer {
      * @param sendMsgReqVO 消息
      */
     public void sendMsg(SendMsgReqVO sendMsgReqVO){
+        // 这里很好玩的是，他直接调用通过userId然后将信息发送给了对应的channel.
         NioSocketChannel socketChannel = SessionSocketHolder.get(sendMsgReqVO.getUserId());
 
         if (null == socketChannel) {

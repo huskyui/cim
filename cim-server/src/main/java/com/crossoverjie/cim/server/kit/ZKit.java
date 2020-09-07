@@ -34,8 +34,7 @@ public class ZKit {
         if (exists){
             return;
         }
-
-        //创建 root
+        //创建 root，创建持久化节点
         zkClient.createPersistent(appConfiguration.getZkRoot()) ;
     }
 

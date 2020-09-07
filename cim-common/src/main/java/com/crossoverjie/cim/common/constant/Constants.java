@@ -3,6 +3,8 @@ package com.crossoverjie.cim.common.constant;
 /**
  * Function:常量
  *
+ * 这里应该使用interface来写的
+ *
  * @author crossoverJie
  *         Date: 28/03/2018 17:41
  * @since JDK 1.8

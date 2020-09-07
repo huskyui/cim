@@ -34,7 +34,7 @@ public class RouteHandler {
     private AppConfiguration configuration;
 
     /**
-     * 用户下线
+     * inactive时，将系统里面的数据删除
      *
      * @param userInfo
      * @param channel
@@ -45,6 +45,7 @@ public class RouteHandler {
             LOGGER.info("Account [{}] offline", userInfo.getUserName());
             SessionSocketHolder.removeSession(userInfo.getUserId());
             //清除路由关系
+            // todo 未知状态
             clearRouteInfo(userInfo);
         }
         SessionSocketHolder.remove(channel);
@@ -59,10 +60,13 @@ public class RouteHandler {
      * @throws IOException
      */
     public void clearRouteInfo(CIMUserInfo userInfo) {
+        // 他这里的代理有点使用java的代理，调用的routeApi.class都代理一下
         RouteApi routeApi = new ProxyManager<>(RouteApi.class, configuration.getRouteUrl(), okHttpClient).getInstance();
         Response response = null;
         ChatReqVO vo = new ChatReqVO(userInfo.getUserId(), userInfo.getUserName());
         try {
+
+            // 这里的调用，实际上是请求的网络请求
             response = (Response) routeApi.offLine(vo);
         } catch (Exception e){
             LOGGER.error("Exception",e);

@@ -27,6 +27,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/")
 public class IndexController implements ServerApi {
 
+
+    /**
+     * 在这里启动nettyServer
+     */
     @Autowired
     private CIMServer cimServer;
 
@@ -49,9 +53,10 @@ public class IndexController implements ServerApi {
     public BaseResponse<SendMsgResVO> sendMsg(@RequestBody SendMsgReqVO sendMsgReqVO){
         BaseResponse<SendMsgResVO> res = new BaseResponse();
         cimServer.sendMsg(sendMsgReqVO) ;
-
+        // 记数，具体实现，我还是不知道的
         counterService.increment(Constants.COUNTER_SERVER_PUSH_COUNT);
 
+        // 返回给前端信息
         SendMsgResVO sendMsgResVO = new SendMsgResVO() ;
         sendMsgResVO.setMsg("OK") ;
         res.setCode(StatusEnum.SUCCESS.getCode()) ;

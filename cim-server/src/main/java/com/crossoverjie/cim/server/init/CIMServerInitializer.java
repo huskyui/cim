@@ -12,7 +12,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 
 /**
  * Function:
- *
+ * 应该将这个类和那个CIMServer放在一起
  * @author crossoverJie
  *         Date: 17/05/2018 18:51
  * @since JDK 1.8
@@ -27,7 +27,7 @@ public class CIMServerInitializer extends ChannelInitializer<Channel> {
         ch.pipeline()
                 //11 秒没有向客户端发送消息就发生心跳
                 .addLast(new IdleStateHandler(11, 0, 0))
-                // google Protobuf 编解码
+                // google Protobuf 编解码，这是我没有想到的，也可以使用json来编解码
                 .addLast(new ProtobufVarint32FrameDecoder())
                 .addLast(new ProtobufDecoder(CIMRequestProto.CIMReqProtocol.getDefaultInstance()))
                 .addLast(new ProtobufVarint32LengthFieldPrepender())

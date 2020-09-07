@@ -14,7 +14,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since JDK 1.8
  */
 public class SessionSocketHolder {
+
+    /**
+     * 这个channel_map 是保存requestId 和 channel来使用的
+     */
     private static final Map<Long, NioSocketChannel> CHANNEL_MAP = new ConcurrentHashMap<>(16);
+    /**
+     * 保存request_id和username之间的信息
+     */
     private static final Map<Long, String> SESSION_MAP = new ConcurrentHashMap<>(16);
 
     public static void saveSession(Long userId,String userName){

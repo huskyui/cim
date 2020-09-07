@@ -63,6 +63,8 @@ public final class ProxyManager<T> {
                 throw new CIMException(VALIDATION_FAIL);
             }
 
+            // 遍历类，将方法里面的第一个位置的参数取出来，并遍历将里面的参数和值放入jsonObject里面
+            // 要我说，不如直接用jsonObject直接转换成jsonString,这样写多此一举
             if (method.getParameterTypes().length > 0){
                 Object para = args[0];
                 Class<?> parameterType = method.getParameterTypes()[0];
@@ -71,6 +73,7 @@ public final class ProxyManager<T> {
                     jsonObject.put(field.getName(), field.get(para));
                 }
             }
+
             return HttpClient.call(okHttpClient, jsonObject.toString(), serverUrl);
         }
     }

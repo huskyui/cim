@@ -8,6 +8,7 @@ import java.util.Map;
 
 /**
  * Function: 自定义端点监控
+ * 没看懂，这个类是干什么用的
  *
  * @author crossoverJie
  *         Date: 17/04/2018 14:47

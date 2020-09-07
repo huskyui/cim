@@ -30,6 +30,11 @@ public class ServerHeartBeatHandlerImpl implements HeartBeatHandler {
     @Autowired
     private AppConfiguration appConfiguration ;
 
+    /**
+     * 当前时间-lastReadTime是否超过规定值，超过就让其离线
+     * @param ctx
+     * @throws Exception
+     */
     @Override
     public void process(ChannelHandlerContext ctx) throws Exception {
 

@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Function:
- *
+ * 用户自定义的处理器，处理读取信息，以及client离线最终导致。
  * @author crossoverJie
  *         Date: 17/05/2018 18:52
  * @since JDK 1.8
@@ -34,7 +34,7 @@ public class CIMServerHandle extends SimpleChannelInboundHandler<CIMRequestProto
 
 
     /**
-     * 取消绑定
+     * client退出，server的内存保存map出去信息
      *
      * @param ctx
      * @throws Exception
@@ -54,15 +54,23 @@ public class CIMServerHandle extends SimpleChannelInboundHandler<CIMRequestProto
         }
     }
 
+    /**
+     * * 我们在创建的时候，创建了一个IdleStateHandler，里面可以设置时间操作，可以发送心跳等等
+     * @param ctx
+     * @param evt
+     * @throws Exception
+     */
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent idleStateEvent = (IdleStateEvent) evt;
+            //
             if (idleStateEvent.state() == IdleState.READER_IDLE) {
 
                 LOGGER.info("定时检测客户端端是否存活");
 
                 HeartBeatHandler heartBeatHandler = SpringBeanFactory.getBean(ServerHeartBeatHandlerImpl.class) ;
+                // 服务器端，进行离线操作
                 heartBeatHandler.process(ctx) ;
             }
         }
@@ -70,19 +78,25 @@ public class CIMServerHandle extends SimpleChannelInboundHandler<CIMRequestProto
     }
 
 
-
+    /**
+     * @param ctx
+     * @param msg
+     * @throws Exception
+     */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, CIMRequestProto.CIMReqProtocol msg) throws Exception {
         LOGGER.info("received msg=[{}]", msg.toString());
 
+        // 这里就很离谱，登录状态，然后就将这个socketChannel保存在
         if (msg.getType() == Constants.CommandType.LOGIN) {
-            //保存客户端与 Channel 之间的关系
+            //保存客户端与 Channel 之间的关系concurrentMap里面
             SessionSocketHolder.put(msg.getRequestId(), (NioSocketChannel) ctx.channel());
             SessionSocketHolder.saveSession(msg.getRequestId(), msg.getReqMsg());
             LOGGER.info("client [{}] online success!!", msg.getReqMsg());
         }
 
-        //心跳更新时间
+
+        //心跳更新时间，更新心跳时间
         if (msg.getType() == Constants.CommandType.PING){
             NettyAttrUtil.updateReaderTime(ctx.channel(),System.currentTimeMillis());
             //向客户端响应 pong 消息

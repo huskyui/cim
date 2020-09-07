@@ -33,6 +33,7 @@ public class CIMServerApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
+		// 项目运行时，会运行这个run方法,并且会注册一个临时节点，将server层的http端口号暴露出去，以及netty的serverPort也暴露出去
 		//获得本机IP
 		String addr = InetAddress.getLocalHost().getHostAddress();
 		Thread thread = new Thread(new RegistryZK(addr, appConfiguration.getCimServerPort(),httpPort));
